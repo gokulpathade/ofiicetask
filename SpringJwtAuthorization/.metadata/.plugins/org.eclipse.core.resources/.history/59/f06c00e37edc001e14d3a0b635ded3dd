@@ -1,0 +1,57 @@
+package net.codejava.model;
+
+import java.util.Collection;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+public class CustomUserDetails implements UserDetails {
+
+    private final User user;
+
+    public CustomUserDetails(User user) {
+        this.user = user;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        // Implement your logic to convert roles to GrantedAuthorities
+        return Set.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return user.getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        // Implement your logic for account expiration
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // Implement your logic for account locking
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // Implement your logic for credentials expiration
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // Implement your logic for account enablement
+        return true;
+    }
+}

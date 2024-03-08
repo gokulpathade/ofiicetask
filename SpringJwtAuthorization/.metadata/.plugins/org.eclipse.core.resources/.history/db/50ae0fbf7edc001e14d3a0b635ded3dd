@@ -1,0 +1,67 @@
+package net.codejava.model;
+
+import java.util.Collection;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+public class CustomUserDetails implements UserDetails {
+
+    private final Integer id;
+    private final String email;
+    private final Collection<SimpleGrantedAuthority> authorities;
+
+    public CustomUserDetails(Integer id, String email, Collection<SimpleGrantedAuthority> authorities2) {
+        this.id = id;
+        this.email = email;
+        this.authorities = authorities2;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    // Implement other UserDetails methods...
+
+    public Integer getId() {
+        return id;
+    }
+
+    @Override
+    public String getPassword() {
+        // Return password or null if not applicable
+        return null;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        // Return true or false based on account expiration
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // Return true or false based on account locking
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // Return true or false based on credentials expiration
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // Return true or false based on user account status
+        return true;
+    }
+}

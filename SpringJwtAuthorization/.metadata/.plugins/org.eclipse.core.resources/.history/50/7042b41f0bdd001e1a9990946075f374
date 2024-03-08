@@ -1,0 +1,83 @@
+package net.codejava.model;
+
+
+
+
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Service;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+public class CustomUserDetails implements UserDetails {
+
+    private final User user;
+    private final Set<? extends GrantedAuthority> authorities;
+    
+  
+
+    public CustomUserDetails(User user, Set<? extends GrantedAuthority> authorities) {
+        this.user = user;
+        this.authorities = authorities;
+    }
+
+  
+    
+    
+    
+    
+    
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        return new CustomUserDetails(user); // Use CustomUserDetails instead of User
+    }
+    
+    
+    
+	@Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
+    @Override
+    public String getPassword() {
+        return user.getPassword();
+    }
+
+    @Override
+    public String getUsername() {
+        return user.getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        // Implement your logic for account expiration
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        // Implement your logic for account locking
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        // Implement your logic for credentials expiration
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        // Implement your logic for account enablement
+        return true;
+    }
+}

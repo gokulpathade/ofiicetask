@@ -1,0 +1,53 @@
+package net.codejava.service;
+
+import javax.transaction.Transactional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import net.codejava.model.User;
+import net.codejava.repository.UserRepository;
+
+@Service
+@Transactional
+
+public class UserService {
+	@Autowired private UserRepository repo;
+	@Autowired private PasswordEncoder passwordEncoder;
+	
+	
+	
+//	public User save(User user) {
+//		// String rawPassword = user.getPassword();
+//		// String encodedPassword = passwordEncoder.encode(rawPassword);
+//		// user.setPassword(encodedPassword);
+//		
+//	user.setEmail();
+//		
+//		return repo.save(user);
+//	}
+//	
+//	
+	
+	
+	
+	
+	
+	public User save(User user) {
+		
+		  user.setEmail(user.getEmail());
+//	        user.setFullname(user.getFullname());
+//	        user.setUserrole(user.getUserrole());
+
+	        // Encode and set the password for the provided user object
+	        user.setPassword(passwordEncoder.encode(user.getPassword()));
+	        
+	        // Save the user object with encoded password
+	        return repo.save(user);
+	}
+	
+	
+}

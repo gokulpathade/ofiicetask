@@ -1,0 +1,9 @@
+package net.codejava.user;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import net.codejava.user.Role;
+
+public interface RoleRepository extends JpaRepository<Role, Integer> {
+
+}
