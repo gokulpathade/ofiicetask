@@ -1,0 +1,28 @@
+package com.rolebasejwttoken.model;
+
+
+
+
+
+
+public enum Role {
+	   ADMIN,
+	   FIELDENGINEER,
+       PRINCEPALENGINEER
+    
+//	    @ManyToOne
+//	    @JoinColumn(name = "user_id") // adjust the column name accordingly
+//	    private User user;
+//	    
+	    
+//	    @ManyToMany(cascade = CascadeType.ALL)
+////	    @ManyToOne
+//		@JoinColumn(name = "userid")
+//		// name should match the actual column name in your database
+//		private User user;
+
+//    @Override
+//    public String getAuthority() {
+//        return role;
+//    }
+}

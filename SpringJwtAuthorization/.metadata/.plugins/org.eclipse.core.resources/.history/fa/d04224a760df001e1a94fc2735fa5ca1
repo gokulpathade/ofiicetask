@@ -1,0 +1,39 @@
+package com.rolebasejwttoken.controller;
+
+import java.net.URI;
+import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.rolebasejwttoken.model.FieldInspection;
+import com.rolebasejwttoken.repository.ProductRepository;
+
+@RestController
+@RequestMapping("/products")
+public class ProductApi {
+
+	@Autowired private ProductRepository repo;
+	
+	@PostMapping
+	@RolesAllowed("ADMIN")
+	public ResponseEntity<FieldInspection> create(@RequestBody @Valid FieldInspection fieldInspection) {
+		FieldInspection savedProduct = repo.save(fieldInspection);
+		URI productURI = URI.create("/products/" + savedProduct.getId());
+		return ResponseEntity.created(productURI).body(savedProduct);
+	}
+	
+	@GetMapping
+	@RolesAllowed({"ROLE_USER", "ROLE_ADMIN"})
+	public List<FieldInspection> list() {
+		return repo.findAll();
+	}
+}

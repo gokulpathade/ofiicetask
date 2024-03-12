@@ -1,0 +1,43 @@
+package com.rolebasejwttoken.model;
+
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+//@NoArgsConstructor
+@Data
+@Getter
+@Setter
+public class AuthRequest {
+	
+/**
+	 * 
+	 */
+	public AuthRequest() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	//	@NotNull @Email @Length(min = 5, max = 50)
+	private String email;
+	
+//	@NotNull @Length(min = 5, max = 10)
+	private String password;
+
+/**
+ * @param email
+ * @param password
+ */
+public AuthRequest(String email, String password) {
+	super();
+	this.email = email;
+	this.password = password;
+}
+
+
+	
+	
+	
+	
+   
+}

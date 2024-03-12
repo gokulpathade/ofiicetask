@@ -1,0 +1,141 @@
+package com.rolebasejwttoken.controller;
+
+
+import javax.validation.Valid;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.rolebasejwttoken.jwt.JwtTokenUtil;
+import com.rolebasejwttoken.model.AuthRequest;
+import com.rolebasejwttoken.model.AuthResponse;
+import com.rolebasejwttoken.service.UserService;
+
+@RestController
+@RequestMapping("/auth")
+public class AuthApi {
+
+	
+	@Autowired
+	JwtTokenUtil jwtUtil;
+
+//	@PostMapping("/login")
+//	public ResponseEntity<?> login(@RequestBody @Valid AuthRequest request) {
+//	    try {
+//	        Authentication authentication = authManager.authenticate(
+//	                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
+//
+//	        CustomUserDetails customUserDetails = (CustomUserDetails) authentication.getPrincipal();
+//	        // Now you can get the User object from CustomUserDetails
+//	        User user = customUserDetails.getUser();
+//
+//	        String accessToken = jwtUtil.generateAccessToken(user);
+//	        AuthResponse response = new AuthResponse(user.getEmail(), accessToken);
+//
+//	        return ResponseEntity.ok().body(response);
+//
+//	    } catch (BadCredentialsException ex) {
+//	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//	    }
+//	}
+
+	 @Autowired
+	    private AuthenticationManager authenticationManager;
+
+	    @Autowired
+	    private UserService userDetailsService;
+
+
+	
+	
+	
+	
+
+	    @PostMapping("/login")
+	    public ResponseEntity<AuthResponse> createToken(@Valid @RequestBody AuthRequest authenticationRequest) throws Exception {  
+	    	this.authenticate(
+	              authenticationRequest.getEmail(), authenticationRequest.getPassword()
+	        );
+	    	
+	    	
+	    	
+//	    	final Authentication authentication = authenticationManager.authenticate(
+//	                new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
+//	        );
+//
+	         UserDetails userDetails = this.userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+
+	        String token =this.jwtUtil.generateToken(userDetails);
+	        AuthResponse response = new AuthResponse();
+	        response.setAccessToken(token);
+	        
+	        
+//
+//	        // Use authenticationRequest.getEmail() instead of email
+	         return new ResponseEntity< AuthResponse>(response, HttpStatus.OK  );
+	    
+	    
+	    
+	    
+	    }
+
+
+
+
+
+
+
+		private void authenticate(String username, String password) throws Exception {
+			// TODO Auto-generated method stub
+			
+			
+			 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password); 
+			
+	
+		try {
+			this.authenticationManager.authenticate(authenticationToken);
+		} catch (BadCredentialsException e) {
+	          System.out.println("invalid details");
+	          
+	          throw new Exception("invalid username and password");
+		}
+		
+		
+		
+		
+		 }
+
+
+
+
+
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+	    
+}

@@ -1,0 +1,5 @@
+package com.rolebasejwttoken.config;
+
+public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
+
+}

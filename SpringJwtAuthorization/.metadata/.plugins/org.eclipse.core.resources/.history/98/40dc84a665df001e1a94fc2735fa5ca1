@@ -1,0 +1,5 @@
+package com.rolebasejwttoken.service;
+
+public class FieldInspectionService {
+
+}

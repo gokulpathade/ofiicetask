@@ -1,0 +1,14 @@
+1710131378587	Rename package 'net.codejava'
+1710131438227	Rename package 'net.codejava.controller'
+1710131477473	Rename package 'net.codejava.dto'
+1710131489428	Rename package 'net.codejava.jwt'
+1710131504482	Rename package 'net.codejava.model'
+1710131518362	Rename package 'net.codejava.repository'
+1710131535026	Rename package 'net.codejava.service'
+1710131653621	Rename type 'Product'
+1710131670952	Rename type 'ProductRepository'
+1710131698919	Rename type 'ProductApi'
+1710132984687	Delete element
+1710139769805	Delete element
+1710139952600	Move compilation unit
+1710148694890	Move compilation unit

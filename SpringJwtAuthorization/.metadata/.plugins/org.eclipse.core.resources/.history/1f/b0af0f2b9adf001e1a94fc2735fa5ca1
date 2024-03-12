@@ -1,0 +1,111 @@
+package com.rolebasejwttoken.controller;
+
+import java.util.List;
+
+import javax.annotation.security.RolesAllowed;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.rolebasejwttoken.dto.UserDTO;
+import com.rolebasejwttoken.model.User;
+import com.rolebasejwttoken.service.UserService;
+
+
+@RestController
+@RequestMapping("/auth")
+public class UserController {
+
+	@Autowired
+	private UserService userService;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	   @GetMapping("/admin/resource")
+	   @RolesAllowed("ADMIN")
+	    public ResponseEntity<String> getSecuredResource() {
+	        // Check authentication here
+	        boolean authenticationFailed = true;
+
+	        if (authenticationFailed) {
+	            HttpHeaders headers = new HttpHeaders();
+	            headers.set(HttpHeaders.WWW_AUTHENTICATE, "Bearer realm=\"Example\", error=\"invalid_token\", error_description=\"The access token expired\"");
+	            return new ResponseEntity<>("Authentication failed", headers, HttpStatus.UNAUTHORIZED);
+	        } else {
+	            // Process the secured resource
+	            return ResponseEntity.ok("Secured resource accessed successfully");
+	        }
+	    }
+	
+	
+	
+	
+	
+
+	@PostMapping("/save")
+	  public ResponseEntity<User> saveUser(@RequestBody UserDTO userDto) {
+    	 return ResponseEntity.ok(userService.save(userDto));
+    	 
+     }
+
+	
+	@GetMapping("/admin/getall")
+	@RolesAllowed("ADMIN")
+	public List<User> getAllUser() {
+	    return userService.getALL();
+	}
+	
+//	@GetMapping("/getall")
+//	@RolesAllowed("ROLE_ADMIN")
+////	@PreAuthorize("hasRole('ROLE_ADMIN')")
+//	public List< User> getAllUser(){
+//		return userService.getAllUser();
+//	}
+
+
+
+//
+//public List<User> getALL() {
+//	return repository.findAll();
+//}
+
+public User getById(int id) {
+	return userService.getById(id);
+
+}
+
+//public UserDTO saveData(Use field) {
+//	return repository.save(field);
+//
+//}
+
+
+public String deleteById(int id) {
+	userService.deleteById(id);
+
+	return "user deleted successfully";
+}
+
+
+}
+
+
+
+
+

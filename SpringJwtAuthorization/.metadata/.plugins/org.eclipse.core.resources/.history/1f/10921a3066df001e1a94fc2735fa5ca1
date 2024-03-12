@@ -1,0 +1,30 @@
+package com.rolebasejwttoken.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.rolebasejwttoken.model.FieldInspection;
+import com.rolebasejwttoken.repository.FieldInspectionRepository;
+
+@Service
+public class FieldInspectionService {
+	
+	@Autowired
+private FieldInspectionRepository repository;
+	
+	public List<FieldInspection> getALL(){
+		return repository.findAll();	
+	}
+	
+	
+	
+	
+	public FieldInspection getById(FieldInspection field) {
+		return repository.findById(field);
+		
+	}
+	
+
+}

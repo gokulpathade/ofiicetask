@@ -1,0 +1,303 @@
+package com.rolebasejwttoken.model;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.validation.constraints.Email;
+
+import org.hibernate.validator.constraints.Length;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+@Entity
+@Table(name = "users")
+public class User  {
+
+
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer id;
+	
+	
+	@Column(nullable = false, length = 64)
+	@Length(min = 5, max = 255)
+	private String Name;
+
+	
+
+	
+	
+	
+	@Column(nullable = false, length = 50, unique = true)
+	@Email
+	@Length(min = 5, max = 50)
+	private String email;
+
+	@Column(nullable = false, length = 64)
+	@Length(min = 5, max = 64)
+	private String password;
+	
+	
+	
+
+	private Role role;
+	
+	
+	
+	
+
+	/**
+	 * @return the fieldInspection
+	 */
+	public List<FieldInspection> getFieldInspection() {
+		return fieldInspection;
+	}
+
+
+
+
+
+	/**
+	 * @param fieldInspection the fieldInspection to set
+	 */
+	public void setFieldInspection(List<FieldInspection> fieldInspection) {
+		this.fieldInspection = fieldInspection;
+	}
+
+
+
+
+
+	@OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List <FieldInspection> fieldInspection;
+
+	
+	
+	
+	
+	
+	
+	
+	
+	//	    private Set<Role> roles = new HashSet<>();
+
+//	  @ManyToMany(fetch = FetchType.EAGER)
+//	    @JoinTable(
+//	            name = "user_roles",
+//	            joinColumns = @JoinColumn(name = "user_id"),
+//	            inverseJoinColumns = @JoinColumn(name = "role_id")
+//	    )
+//	    private Collection<? extends GrantedAuthority> authorities;
+	
+	/**
+	 * 
+	 */
+	public User() {
+//		this.authorities = null;
+//		super();
+		// TODO Auto-generated constructor stub
+	}
+
+
+
+
+
+
+
+
+
+/**
+	 * @param id
+	 * @param name
+	 * @param email
+	 * @param password
+	 * @param role
+	 * @param fieldInspection
+	 */
+	public User(Integer id, @Length(min = 5, max = 255) String name, @Email @Length(min = 5, max = 50) String email,
+			@Length(min = 5, max = 64) String password, Role role, List<FieldInspection> fieldInspection) {
+		super();
+		this.id = id;
+		Name = name;
+		this.email = email;
+		this.password = password;
+		this.role = role;
+		this.fieldInspection = fieldInspection;
+	}
+
+
+
+
+
+/**
+ * @return the id
+ */
+public Integer getId() {
+	return id;
+}
+
+
+
+
+
+/**
+ * @param id the id to set
+ */
+public void setId(Integer id) {
+	this.id = id;
+}
+
+
+
+
+
+/**
+ * @return the name
+ */
+public String getName() {
+	return Name;
+}
+
+
+
+
+
+/**
+ * @param name the name to set
+ */
+public void setName(String name) {
+	Name = name;
+}
+
+
+
+
+
+/**
+ * @return the email
+ */
+public String getEmail() {
+	return email;
+}
+
+
+
+
+
+/**
+ * @param email the email to set
+ */
+public void setEmail(String email) {
+	this.email = email;
+}
+
+
+
+
+
+/**
+ * @return the password
+ */
+public String getPassword() {
+	return password;
+}
+
+
+
+
+
+/**
+ * @param password the password to set
+ */
+public void setPassword(String password) {
+	this.password = password;
+}
+
+
+
+
+
+/**
+ * @return the role
+ */
+public Role getRole() {
+	return role;
+}
+
+
+
+
+
+/**
+ * @param role the role to set
+ */
+public void setRole(Role role) {
+	this.role = role;
+}
+
+
+	/**
+	 * @param id
+	 * @param email
+	 * @param password
+	 * @param authorities
+	 */
+
+
+//	@Override
+//	public Collection<? extends GrantedAuthority> getAuthorities() {
+//		List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+//		for (Role role : roles) {
+//			authorities.add(new SimpleGrantedAuthority(role.getName()));
+//		}
+//		return authorities;
+//	}
+
+//	
+//	 public Collection<? extends GrantedAuthority> getAuthorities() {
+////	        return authorities;
+//	    }
+
+	
+
+//
+//	public Set<Role> getRoles() {
+//		return roles;
+//	}
+//
+//	public void setRoles(Set<Role> roles) {
+//		this.roles = roles;
+//	}
+//
+//	public void addRole(Role role) {
+//		this.roles.add(role);
+//	}
+
+
+	
+	
+	
+	
+	
+}
