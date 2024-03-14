@@ -1,0 +1,489 @@
+.cardpadding{
+    padding: 10px;
+    margin-right: 100px;
+    
+}
+
+.emptitle{
+  margin-right: 50px;
+    font-size: 17px;
+   color: #264D60;
+   
+  
+}
+.emptotal{
+    margin-right: 150px;
+    font-weight: 600;
+    color: #264D60;
+}
+
+.empicon{
+    margin-top: 50px;
+    margin-left: '50px';
+    size: medium;
+    color:#264D60;
+}
+.dailyemp{
+    font-size: 18px;
+    color: #264D60;
+}
+.leaveemp{
+    font-size: 18px;
+    color: #264D60;
+}
+.gradient1{
+    /* background: rgb(86, 224, 248);
+    background: linear-gradient(158deg,rgba(53,138,148,1)0%,rgb(51, 184, 241)100%); */
+    background: "linear-gradient(#e66465, #9198e5)" 
+    
+}
+.gradient2{
+    /* background: rgb(181, 20, 168);
+    background: linear-gradient(158deg,rgb(244, 167, 238)0%,rgb(181, 20, 168)100%); */
+    background: "linear-gradient(#e66465, #9198e5)" 
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+import React, { useState, useEffect } from "react";
+import { toast } from "react-toastify";
+import config from "../../config";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
+import { Grid } from "@mui/material";
+
+import {
+  Card,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  TextField,
+  Button,
+} from "@mui/material";
+import NavBar from "../dashboard/NavBar";
+import SideBar from "../dashboard/SideBar";
+
+const Addemployee = () => {
+  const [Emp_No, setEmp_No] = useState("");
+  const [Name, setName] = useState("");
+  const [Last_Name, setLast_Name] = useState("");
+  const [Country, setCountry] = useState("");
+  const [Email, setEmail] = useState("");
+  const [Address, setAddress] = useState("");
+  const [City, setCity] = useState("");
+  const [Department, setDepartment] = useState("");
+  const [Blood_Group, setBlood_Group] = useState("");
+  const [Hire_Date, setHire_Date] = useState("");
+  const [Birth_Date, setBirth_Date] = useState("");
+  const [Contact, setContact] = useState("");
+  const [Password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [Role, setRole] = useState("");
+  const [selected, setSelected] = useState("");
+  const [ManagerId, setManagerId] = useState("");
+  const [manageroptions, setManageroptions] = useState([]);
+  const [optionList, setOptionList] = useState([]);
+  const [options] = useState(["A+", "B+", "AB+"]);
+  const [options1] = useState([
+    "India",
+    "Japan",
+    "China",
+    "Italy",
+    "Japan",
+    "Nepal",
+    "Brazil",
+    "Afghanistan",
+    "Canada",
+    "Indonesia",
+    "Thailand",
+  ]);
+  const [optionss] = useState(["Admin", "User", "Manager"]);
+  const [registration, setRegistration] = useState([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    getmanagernames();
+    addEmp();
+  }, []);
+
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent the default form submission
+    addEmp();
+  };
+
+  const addEmp = () => {
+    // Check if the user has entered values
+    if (
+      Emp_No.length === 0 || Name.length === 0 || Last_Name.length === 0 || Country.length === 0 ||
+        Email.length === 0 || Address.length === 0 || City.length === 0 || Department.length === 0 ||
+        Blood_Group.length === 0 || Role.length === 0 || Hire_Date.length === 0 || Birth_Date.length === 0 ||
+        Contact.length === 0 || Password.length === 0 || confirmPassword.length === 0 || ManagerId.length === 0)
+         {
+      toast.error("Please fill in all fields");
+    } else if (Password !== confirmPassword) {
+      toast.error("Passwords do not match");
+    } else {
+      const body = {
+        Emp_No,
+        Name,
+        Last_Name,
+        Country,
+        Email,
+        Address,
+        City,
+        Department,
+        Blood_Group,
+        Hire_Date,
+        Birth_Date,
+        Contact,
+        Password,
+        Role,
+        ManagerId,
+      };
+
+      // Make the API call to check if the user exists
+      axios.post(config.serverURL + "/user/signup", body, {
+        headers: { token: sessionStorage["token"] },
+      })
+        .then((response) => {
+          console.log("data  is here ",+ response)
+          const result = response.data;
+          if (result.status === "success") {
+            toast.success("Form submitted successfully");
+            navigate("/userdetails");
+            // Clear the form fields after successful submission
+            setEmp_No('');
+            setName('');
+            setLast_Name('');
+            setCountry('');
+            setEmail('');
+            setAddress('');
+            setCity('');
+            setDepartment('');
+            setBlood_Group('');
+            setHire_Date('');
+            setBirth_Date('');
+            setContact('');
+            setPassword('');
+            setConfirmPassword('');
+            setManagerId('');
+          } else {
+            toast.error("Form submission failed");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    }
+  };
+
+
+
+
+// Get Manager Name Here 
+
+const getmanagernames = () => {
+  axios
+    .get(config.serverURL + "/use/manager", {
+      headers: { token: sessionStorage["token"] },
+    })
+    .then((response) => {
+      const result = response.data;
+      console.log("Data is here Using Api ", result);
+
+      if (result["status"] === "success") {
+        console.log("manager details ..", result);
+
+        setManageroptions(result["data"]);
+      } else {
+        toast.error(result["error"]);
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching manager details:", error);
+    });
+};
+
+
+
+
+
+
+
+
+  return (
+    <>
+      <NavBar />
+      <SideBar />
+      <Card
+        sx={{
+          marginLeft: "10%",
+          marginRight: "40%",
+          width: "auto",
+          padding: "50px",
+          height: "800px",
+        }}
+      >
+        <h2 style={{ padding: "10px" }}>Add New Employee</h2>
+        <form onSubmit={handleSubmit}>
+          <Grid container spacing={2} className="container-sm">
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="text"
+                  label="Emp No"
+                  placeholder="Emp No"
+                  value={Emp_No}
+                  onChange={(event) => setEmp_No(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <InputLabel id="Department-label">Department</InputLabel>
+                <Select
+                  labelId="Department-label"
+                  id="id_Department"
+                  value={Department}
+                  onChange={(event) => setDepartment(event.target.value)}
+                >
+                  <MenuItem value="">Select Department</MenuItem>
+                  {optionList?.map((item) => (
+                    <MenuItem key={item.deptid} value={item.deptname}>
+                      {item.deptname}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="text"
+                  label="First Name"
+                  placeholder="First Name"
+                  value={Name}
+                  onChange={(event) => setName(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="text"
+                  label="Last Name"
+                  placeholder="Last Name"
+                  value={Last_Name}
+                  onChange={(event) => setLast_Name(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <InputLabel id="Blood_Group-label">Blood Group</InputLabel>
+                <Select
+                  labelId="Blood_Group-label"
+                  id="id_Blood_Group"
+                  value={Blood_Group}
+                  onChange={(event) => setBlood_Group(event.target.value)}
+                  label="Blood Group"
+                >
+                  <MenuItem value="">Select Blood group</MenuItem>
+                  {options.map((item) => (
+                    <MenuItem key={item} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <InputLabel id="Country-label">Country</InputLabel>
+                <Select
+                  labelId="Country-label"
+                  id="id_selectCountry"
+                  value={Country}
+                  onChange={(event) => setCountry(event.target.value)}
+                  label="Country"
+                >
+                  <MenuItem value="">Select</MenuItem>
+                  {options1.map((item) => (
+                    <MenuItem key={item} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="date"
+                  label="Date Of Birth"
+                  name="Date Of Birth"
+                  id="id_Birth_Date"
+                  placeholder="Birth Date"
+                  onChange={(event) => setBirth_Date(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="Email"
+                  label="Email"
+                  name="newEmail"
+                  id="id_newEmail"
+                  placeholder="name@meg-nxt.com"
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="number"
+                  label="Mobile Number"
+                  name="mobileno"
+                  id="id_mobileno"
+                  placeholder="Mobile No"
+                  onChange={(event) => setContact(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <Select
+                  labelId="Role"
+                  label="Select User Role"
+                  id="id_Role"
+                  value={Role}
+                  onChange={(event) => setRole(event.target.value)}
+                >
+                  <MenuItem value="">Select Role</MenuItem>
+                  {optionss.map((item) => (
+                    <MenuItem key={item} value={item}>
+                      {item}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="text"
+                  label="City"
+                  name="City"
+                  id="id_City"
+                  placeholder="City"
+                  onChange={(event) => setCity(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="text"
+                  label="Address"
+                  name="Address"
+                  id="id_Address"
+                  placeholder="Address"
+                  onChange={(event) => setAddress(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="Password"
+                  label="Password"
+                  name="confirmPassword"
+                  id="id_confirmPassword"
+                  placeholder="Password"
+                  onChange={(event) => setConfirmPassword(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <TextField
+                  type="Password"
+                  label="Password"
+                  name="Password2"
+                  id="id_Password2"
+                  placeholder="Password"
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </FormControl>
+            </Grid>
+            <Grid item xs={6}>
+              <FormControl sx={{ width: "80%" }}>
+                <Select
+                  labelId="manager-label"
+                  label="Select Manager"
+                  id="id_manager"
+                  disabled={false}
+                  value={ManagerId}
+                  onChange={(event) => setManagerId(event.target.value)}
+                >
+                  <MenuItem value="">Select Manager</MenuItem>
+                  {manageroptions
+                    .filter((emps) => emps.Role === "manager")
+                    .map((emps) => (
+                      <MenuItem key={emps.Rid} value={`${emps.Rid}`}>
+                        {emps.Rid}   <span>{emps.Name}</span>
+                      
+                      </MenuItem>
+                    ))}
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid container item justifyContent="center">
+            <Grid item>
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              onClick={handleSubmit}
+            >
+              Submit
+            </Button>
+          </Grid>
+            </Grid>
+          </Grid>
+        </form>
+      </Card>
+    </>
+  );
+};
+
+export default Addemployee;

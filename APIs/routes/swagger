@@ -1,0 +1,9 @@
+const swaggerUI =require("swagger-ui-express");
+const yaml=require("yamljs");
+const swaggerJSDocs =YAML.load("api.yaml");
+
+const options ={
+  
+}
+
+module.exports={swaggerServe: swaggerUI.serve, swaggerSetup}

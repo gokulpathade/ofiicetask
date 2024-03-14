@@ -1,0 +1,1421 @@
+/* // styles.js */
+.container{
+  table.dataTable thead .sorting:after,
+  table.dataTable thead .sorting:before,
+  table.dataTable thead .sorting_asc:after,
+  table.dataTable thead .sorting_asc:before,
+  table.dataTable thead .sorting_asc_disabled:after,
+  table.dataTable thead .sorting_asc_disabled:before,
+  table.dataTable thead .sorting_desc:after,
+  table.dataTable thead .sorting_desc:before,
+  table.dataTable thead .sorting_desc_disabled:after,
+
+  table.dataTable thead .sorting_desc_disabled:before 
+  {
+    bottom: .5em;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// import * as React from 'react';
+import { useState, useEffect } from "react";
+import axios from "axios";
+import config from "../../config";
+import { toast } from "react-toastify";
+
+import { format } from "date-fns";
+import { styled } from "@mui/material/styles";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell, { tableCellClasses } from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.white,
+    color: theme.palette.common.black,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  "&:nth-of-type(odd)": {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  "&:last-child td, &:last-child th": {
+    border: 0,
+  },
+}));
+
+function createData(
+    Rid:number,
+  Name: string,
+  Address: string,
+  //   Name: string,
+  Contact: number,
+  Date: Date
+) {
+  return {Rid, Name, Contact, Date, Address };
+}
+
+const rows = [];
+
+export default function CustomizedTables() {
+  const USER_ID = sessionStorage.getItem("userId");
+  const [history, setHistory] = useState([]);
+
+
+
+
+  useEffect(() => {
+    Reportingdetails(USER_ID);
+  }, []);
+
+  const Reportingdetails = (USER_ID) => {
+    console.log("Data Enter the Loop:" + USER_ID);
+    axios
+      .get(config.serverURL + `/reporting/reportingdetail/mid/${USER_ID}`, {
+        headers: { token: sessionStorage["token"] },
+      })
+      .then((response) => {
+        const result = response.data;
+        console.log("API Response:", result);
+        setHistory(result);
+
+      //   if (result["status"] === "success") {
+      //     console.log("Data Enter the Loop:", result);
+      //     const managerTeamUsers = result["data"];
+      //     setHistory(managerTeamUsers);
+      //     console.log("Updated history state:", history);
+      //   } else {
+      //     toast.error(result["error"]);
+      //   }
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Error fetching reporting details");
+      });
+  };
+  // &nbsp;
+
+  return (
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+        <TableHead>
+          <TableRow>
+            <StyledTableCell>Rid</StyledTableCell>
+            <StyledTableCell>Name</StyledTableCell>
+            <StyledTableCell>Contact</StyledTableCell>
+            <StyledTableCell> Address</StyledTableCell>
+            <StyledTableCell>Date</StyledTableCell>
+            {/* <StyledTableCell ></StyledTableCell> */}
+          </TableRow>
+        </TableHead>
+        <TableBody>
+        {history.map((row) => (
+  <StyledTableRow key={row.Rid}>
+    <StyledTableCell component="th" scope="row">
+      {row.Rid}
+    </StyledTableCell>
+    <StyledTableCell>{row.Name}</StyledTableCell>
+    <StyledTableCell>{row.Contact}</StyledTableCell>
+    <StyledTableCell>{row.Address}</StyledTableCell>
+    <StyledTableCell>
+      {row.Date && format(new Date(row.Date), "yyyy-MM-dd")}
+    </StyledTableCell>
+  </StyledTableRow>
+))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* **************************************************************************************** !1*/
+leave application pendings
+
+import * as React from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import config from "../../config";
+import { toast } from "react-toastify";
+
+import { useNavigate } from "react-router-dom";
+
+import PropTypes from "prop-types";
+import { alpha } from "@mui/material/styles";
+import Box from "@mui/material/Box";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Toolbar from "@mui/material/Toolbar";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
+import Checkbox from "@mui/material/Checkbox";
+import IconButton from "@mui/material/IconButton";
+import Tooltip from "@mui/material/Tooltip";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import DeleteIcon from "@mui/icons-material/Delete";
+import FilterListIcon from "@mui/icons-material/FilterList";
+import { visuallyHidden } from "@mui/utils";
+
+function createData(id, name, calories, fat, carbs, protein) {
+  return {
+    id,
+
+    protein,
+  };
+}
+
+const rows = [
+  createData(1, "Cupcake", 305, 3.7, 67, 4.3),
+  createData(2, "Donut", 452, 25.0, 51, 4.9),
+  createData(3, "Eclair", 262, 16.0, 24, 6.0),
+  createData(4, "Frozen yoghurt", 159, 6.0, 24, 4.0),
+  createData(5, "Gingerbread", 356, 16.0, 49, 3.9),
+  createData(6, "Honeycomb", 408, 3.2, 87, 6.5),
+  createData(7, "Ice cream sandwich", 237, 9.0, 37, 4.3),
+  createData(8, "Jelly Bean", 375, 0.0, 94, 0.0),
+  createData(9, "KitKat", 518, 26.0, 65, 7.0),
+  createData(10, "Lollipop", 392, 0.2, 98, 0.0),
+  createData(11, "Marshmallow", 318, 0, 81, 2.0),
+  createData(12, "Nougat", 360, 19.0, 9, 37.0),
+  createData(13, "Oreo", 437, 18.0, 63, 4.0),
+];
+
+function descendingComparator(a, b, orderBy) {
+  if (b[orderBy] < a[orderBy]) {
+    return -1;
+  }
+  if (b[orderBy] > a[orderBy]) {
+    return 1;
+  }
+  return 0;
+}
+
+function getComparator(order, orderBy) {
+  return order === "desc"
+    ? (a, b) => descendingComparator(a, b, orderBy)
+    : (a, b) => -descendingComparator(a, b, orderBy);
+}
+
+// Since 2020 all major browsers ensure sort stability with Array.prototype.sort().
+// stableSort() brings sort stability to non-modern browsers (notably IE11). If you
+// only support modern browsers you can replace stableSort(exampleArray, exampleComparator)
+// with exampleArray.slice().sort(exampleComparator)
+function stableSort(array, comparator) {
+  const stabilizedThis = array.map((el, index) => [el, index]);
+  stabilizedThis.sort((a, b) => {
+    const order = comparator(a[0], b[0]);
+    if (order !== 0) {
+      return order;
+    }
+    return a[1] - b[1];
+  });
+  return stabilizedThis.map((el) => el[0]);
+}
+
+// const headCells = [
+//   {
+//     id: 'name',
+//     numeric: false,
+//     disablePadding: true,
+//     label: 'Dessert (100g serving)',
+//   },
+//   {
+//     id: 'calories',
+//     numeric: true,
+//     disablePadding: false,
+//     label: 'Calories',
+//   },
+
+// ];
+
+const headCells = [
+  { id: "R_Id", numeric: false, disablePadding: true, label: "ID" },
+  { id: "Date", numeric: false, disablePadding: true, label: "Date" },
+
+  { id: "TimeIn", numeric: false, disablePadding: true, label: "Time_In" },
+  { id: "TimeOut", numeric: false, disablePadding: true, label: "Time_Out" },
+
+  {
+    id: "Total_Hours",
+    numeric: false,
+    disablePadding: true,
+    label: "Total Hours",
+  },
+  { id: "Late_In", numeric: false, disablePadding: true, label: "Late In" },
+
+  { id: "EarlyOut", numeric: false, disablePadding: true, label: "Early Out" },
+];
+
+function EnhancedTableHead(props) {
+  const {
+    onSelectAllClick,
+    order,
+    orderBy,
+    numSelected,
+    rowCount,
+    onRequestSort,
+  } = props;
+  const createSortHandler = (property) => (event) => {
+    onRequestSort(event, property);
+  };
+
+  return (
+    <TableHead>
+      <TableRow sx={{ textAlign: "center" }}>
+        <TableCell padding="checkbox">
+          <Checkbox
+            color="primary"
+            indeterminate={numSelected > 0 && numSelected < rowCount}
+            checked={rowCount > 0 && numSelected === rowCount}
+            onChange={onSelectAllClick}
+            inputProps={{
+              "aria-label": "select all desserts",
+            }}
+          />
+        </TableCell>
+        {headCells.map((headCell) => (
+          <TableCell
+            key={headCell.id}
+            // align={headCell.numeric ? 'right' : 'left'}
+            // padding={headCell.disablePadding ? 'none' : 'normal'}
+            sortDirection={orderBy === headCell.id ? order : false}
+          >
+            <TableSortLabel
+              active={orderBy === headCell.id}
+              direction={orderBy === headCell.id ? order : "asc"}
+              onClick={createSortHandler(headCell.id)}
+            >
+              {headCell.label}
+              {orderBy === headCell.id ? (
+                <Box component="span" sx={{}}>
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
+                </Box>
+              ) : null}
+            </TableSortLabel>
+          </TableCell>
+        ))}
+      </TableRow>
+    </TableHead>
+  );
+}
+
+EnhancedTableHead.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+  onRequestSort: PropTypes.func.isRequired,
+  onSelectAllClick: PropTypes.func.isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+  orderBy: PropTypes.string.isRequired,
+  rowCount: PropTypes.number.isRequired,
+};
+
+function EnhancedTableToolbar(props) {
+  const { numSelected } = props;
+
+  return (
+    <Toolbar
+      sx={{
+        pl: { sm: 2 },
+        pr: { xs: 1, sm: 1 },
+        ...(numSelected > 0 && {
+          bgcolor: (theme) =>
+            alpha(
+              theme.palette.primary.main,
+              theme.palette.action.activatedOpacity
+            ),
+        }),
+      }}
+    >
+      {numSelected > 0 ? (
+        <Typography
+          sx={{ flex: "1 1 100%" }}
+          color="inherit"
+          variant="subtitle1"
+          component="div"
+        >
+          {numSelected} selected
+        </Typography>
+      ) : (
+        <Typography
+          sx={{ flex: "1 1 100%" }}
+          variant="h6"
+          id="tableTitle"
+          component="div"
+        >
+          Nutrition
+        </Typography>
+      )}
+
+      {numSelected > 0 ? (
+        <Tooltip title="Delete">
+          <IconButton>
+            <DeleteIcon />
+          </IconButton>
+        </Tooltip>
+      ) : (
+        <Tooltip title="Filter list">
+          <IconButton>
+            <FilterListIcon />
+          </IconButton>
+        </Tooltip>
+      )}
+    </Toolbar>
+  );
+}
+
+EnhancedTableToolbar.propTypes = {
+  numSelected: PropTypes.number.isRequired,
+};
+
+
+
+
+export default function EnhancedTable() {
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("calories");
+  const [selected, setSelected] = React.useState([]);
+  const [page, setPage] = React.useState(0);
+  const [dense, setDense] = React.useState(false);
+  const [rowsPerPage, setRowsPerPage] = React.useState(5);
+
+  const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
+    setOrder(isAsc ? "desc" : "asc");
+    setOrderBy(property);
+  };
+
+//   const isSelected = (id) => selected.indexOf(id) !== -1;
+
+
+
+
+  
+  const handleSelectAllClick = (event) => {
+    if (event.target.checked) {
+      const newSelected = rows.map((n) => n.id);
+      setSelected(newSelected);
+      return;
+    }
+    setSelected([]);
+  };
+
+  const handleClick = (event, id) => {
+    const selectedIndex = selected.indexOf(id);
+    let newSelected = [];
+
+    if (selectedIndex === -1) {
+      newSelected = newSelected.concat(selected, id);
+    } else if (selectedIndex === 0) {
+      newSelected = newSelected.concat(selected.slice(1));
+    } else if (selectedIndex === selected.length - 1) {
+      newSelected = newSelected.concat(selected.slice(0, -1));
+    } else if (selectedIndex > 0) {
+      newSelected = newSelected.concat(
+        selected.slice(0, selectedIndex),
+        selected.slice(selectedIndex + 1)
+      );
+    }
+    setSelected(newSelected);
+  };
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
+  const isSelected = (id) => selected.indexOf(id) !== -1;
+
+  // Avoid a layout jump when reaching the last page with empty rows.
+  const emptyRows =
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+
+  const visibleRows = React.useMemo(
+    () =>
+      stableSort(rows, getComparator(order, orderBy)).slice(
+        page * rowsPerPage,
+        page * rowsPerPage + rowsPerPage
+      ),
+    [order, orderBy, page, rowsPerPage]
+  );
+
+  //   ************************************************************
+  const USER_ID = sessionStorage.getItem("userId");
+  const [history, setHistory] = useState([]);
+  useEffect(() => {
+    Reportingdetails(USER_ID);
+  }, []);
+
+  const Reportingdetails = (USER_ID) => {
+    console.log("Data Enter the Loop:" + USER_ID);
+    axios
+      .get(config.serverURL + `/applyLeave/Pending/${USER_ID}`, {
+        headers: { token: sessionStorage["token"] },
+      })
+      .then((response) => {
+        const result = response.data;
+        console.log("API Response:", result);
+        setHistory(result);
+      })
+      .catch((error) => {
+        console.error(error);
+        toast.error("Error fetching reporting details");
+      });
+  };
+
+  //   ************************************************************
+  //   ************************************************************
+  return (
+    <Box sx={{ width: "100%" }}>
+      <Paper sx={{ width: "100%", mb: 2 }}>
+        <EnhancedTableToolbar numSelected={selected.length} />
+        <TableContainer>
+          <Table
+            sx={{ minWidth: 750 }}
+            aria-labelledby="tableTitle"
+            size={dense ? "small" : "medium"}
+          >
+            <EnhancedTableHead
+              numSelected={selected.length}
+              order={order}
+              orderBy={orderBy}
+              onSelectAllClick={handleSelectAllClick}
+              onRequestSort={handleRequestSort}
+              rowCount={rows.length}
+            />
+            <TableBody>
+              {history.map((row, index) => {
+            
+                    const isItemSelected = isSelected(row.id);
+                    const labelId = `enhanced-table-checkbox-${index}`;
+
+                return (
+                    <TableRow
+                    hover
+                    onClick={(event) => handleClick(event, row.id)}
+                    role="checkbox"
+                    aria-checked={isItemSelected}
+                    tabIndex={-1}
+                    key={row.id}
+                    selected={isItemSelected}
+                    sx={{ cursor: 'pointer' }}
+                  >
+                   <TableCell padding="checkbox">
+                      <Checkbox
+                        color="primary"
+                        checked={isItemSelected}
+                        inputProps={{
+                          'aria-labelledby': labelId,
+                        }}
+                      />
+                      {row.Rid}
+                    </TableCell>
+                    {/* <TableCell align="right">{row.Id}</TableCell> */}
+                    <TableCell>{row.StartDate}</TableCell>
+                    <TableCell>{row.EndDate}</TableCell>
+                    <TableCell>{row.Reason}</TableCell>
+                    <TableCell>{row.LDays}</TableCell>
+                    <TableCell>{row.ApplyStatus}</TableCell>
+                    <TableCell>{row.LType}</TableCell>
+                  </TableRow>
+                );
+              })}
+              {emptyRows > 0 && <TableRow></TableRow>}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={rows.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </Paper>
+    </Box>
+  );
+}
+
+/* **************************************************************************************** */
+/* **************************************************************************************** */
+/* **************************************************************************************** */
+/* **************************************************************************************** */
+/* **************************************************************************************** */
+/* ****************************************************************************************1 */
+
+/* App Css  */
+
+
+
+@media screen and (min-width: 480px) {
+  @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Lato', sans-serif;
+  }
+
+
+
+
+  .App {
+    text-align: center;
+    align-items: center;
+    align-content: center;
+
+    padding-top: 10px;
+    margin-left: 10px;
+    margin-right: 10px;
+
+  }
+
+
+
+  .App-header {
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+  }
+
+  .App-link {
+    color: #95e0f5;
+  }
+
+  .rbc-header {
+    background: #fffefe;
+  }
+
+
+  body {
+    margin-left: 10px;
+    padding-left: 10px;
+    background-color: #fffbfb;
+    align-content: center;
+  }
+
+
+
+
+.row #title {
+  flex: 70%;
+}
+
+
+
+.row {
+  align-items: center;
+  flex: 30;
+}
+
+
+
+/* All Cards  CSS Here*/
+.card-container {
+  display: grid;
+  flex-wrap: wrap;
+  grid-template-columns: repeat(1, 1fr);
+  /* 4 columns */
+  gap: 20px;
+  justify-content: center;
+  align-content: center;
+  margin: 20px;
+}
+
+.card {
+  /* display: flex; */
+  background-color: #ffffff;
+  padding: 20px;
+  border: 1px solid #dddddd;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-size: 18px;
+  /* height: 200px; */
+
+}
+
+/* All Cards  CSS end Here*/
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* ksfjjgasjdfuywfasduiftafsfguyf */
+/* ADD Employee */
+
+
+
+
+
+
+// ******************************************************************************
+// ******************************************************************************
+import axios from "axios";
+import config from "../../config";
+import { toast } from "react-toastify";
+import { useEffect, useState } from "react";
+import { useNavigate, React } from "react-router-dom";
+
+import Tooltip from "react-bootstrap/Tooltip";
+import Button from "react-bootstrap/Button";
+import Modal from "react-bootstrap/Modal";
+import PasswordStrengthMeter from "../slices/PasswordStrengthMeter"
+
+
+const EmployeeDetails = () => {
+  const [empno, setEmpno] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [country, setCountry] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [address, setaddress] = useState("");
+  const [city, setCity] = useState("");
+  const [Department, setDepartment] = useState("");
+  const [BloodGroup, setBloodGroup] = useState("");
+  const [Hire_Date, setHire_Date] = useState("");
+  const [Birth_Date, setBirth_Date] = useState("");
+  const [managerid, setManagerId] = useState("");
+  const [moNo, setmobileNo] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [optionList, setOptionList] = useState([]); //just adding
+  const [manageroptions, setManageroptions] = useState([]);
+
+  const options = ["A+", "B+", "AB+"];
+  const options1 = [
+    "India",
+    "Japan",
+    "Chaina",
+    "Italy",
+    "Japan",
+    "Nepal",
+    "Brazil",
+    "Afghanistan",
+    "Canada",
+    "Indonesia",
+    "Thailand",
+  ];
+  const [role, setSelected] = useState("");
+  const optionss = ["Admin", "User", "Manager"];
+
+  const [registration, setRegistration] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+  const [basicModal, setBasicModal] = useState(false);
+  const handleClose1 = () => setBasicModal(false);
+  const handleShow1 = () => {
+    setBasicModal(true); // Show the modal
+  };
+  const handleDelete = (emps) => {
+    console.log("Delete button clicked. emps:", emps);
+    handleShow(emps);
+    console.log("console log ");
+    deleteHome(emps.rid);
+  };
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Upload Image
+    </Tooltip>
+  );
+  const renderTooltip1 = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Edit
+    </Tooltip>
+  );
+  const renderTooltip2 = (props) => (
+    <Tooltip id="button-tooltip" {...props}>
+      Delete
+    </Tooltip>
+  );
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // getmanagerdetails()
+    getuserdetails();
+    getempdetails();
+    getmanagernames();
+  }, [basicModal, show]);
+
+  const getuserdetails = () => {
+    axios
+      .get(config.serverURL + "/use/", {
+        headers: { token: sessionStorage["token"] },
+      })
+      .then((response) => {
+        const result = response.data;
+
+        if (result["status"] === "success") {
+          console.log(result);
+          // set the homes to the state member
+          setRegistration(result["data"]);
+        } else {
+          toast.error(result["error"]);
+        }
+      });
+  };
+
+  // const getmanagerdetails = () => {
+  //   axios
+  //     .get(config.serverURL + '/use/role', {
+  //       headers: { token: sessionStorage['token'] },
+  //     })
+  //     .then((response) => {
+  //       const result = response.data
+
+  //       if (result['status'] === 'success') {
+  //         console.log(result)
+  //         // set the homes to the state member
+  //         setRegistration(result['data'])
+  //       } else {
+  //         toast.error(result['error'])
+  //       }
+  //     })
+  // }
+
+  const deleteHome = (rid) => {
+    console.log("inside deleteHome Method", rid);
+    axios
+      .delete(config.serverURL + "/use/" + rid, {
+        headers: { token: sessionStorage["token"] },
+      })
+      .then((response) => {
+        const result = response.data;
+        if (result["status"] === "success") {
+          console.log("successfully deleted");
+          toast.success("successfully deleted");
+
+          // getuserdetails()
+          handleClose();
+        } else {
+          toast.warning("record present into another table ");
+          console.log(
+            "Can't delete record because present into another table "
+          );
+          toast.error(result["error"]);
+        }
+      });
+  };
+
+  const editHome = (rid) => {
+    navigate("/edit-emp", { state: { rid: rid } });
+  };
+
+  const uploadImage = (ridd) => {
+    navigate("/upload-image", { state: { rId: ridd } });
+  };
+
+  const getempdetails = () => {
+    axios
+      .get(config.serverURL + "/Department/", {
+        headers: { token: sessionStorage["token"] },
+      })
+      .then((response) => {
+        const result = response.data;
+
+        if (result["status"] === "success") {
+          console.log(result);
+          // set the homes to the state member
+          setOptionList(result["data"]);
+        } else {
+          toast.error(result["error"]);
+        }
+      });
+  };
+
+  const getmanagernames = () => {
+    axios
+      .get(config.serverURL + "/use/manager", {
+        headers: { token: sessionStorage["token"] },
+      })
+      .then((response) => {
+        const result = response.data;
+        console.log("Data is here Using Api ", result);
+  
+        if (result["status"] === "success") {
+          console.log("manager details ..", result);
+  
+          setManageroptions(result["data"]);
+        } else {
+          toast.error(result["error"]);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching manager details:", error);
+      });
+  };
+  
+  const addemp = () => {
+    // check if user has really entered any value
+    if (empno.length === 0) {
+      toast.error("please enter EmpNumber ");
+    } else if (firstName.length === 0) {
+      toast.error("please enter first name");
+    } else if (lastName.length === 0) {
+      toast.error("please enter last name");
+    } else if (country.length === 0) {
+      toast.error("please enter country name");
+    } else if (email.length === 0) {
+      toast.error("please enter email");
+    } else if (address.length === 0) {
+      toast.error("please enter address");
+    } else if (city.length === 0) {
+      toast.error("please enter city");
+    } else if (Department.length === 0) {
+      toast.error("please enter Department");
+    } else if (BloodGroup.length === 0) {
+      toast.error("please enter BloodGroup");
+    } else if (role.length === 0) {
+      toast.error("please select role");
+    } else if (Hire_Date.length === 0) {
+      toast.error("please select Hire_Date");
+    } else if (Birth_Date.length === 0) {
+      toast.error("please select Birth_Date");
+    } else if (moNo.length === 0) {
+      toast.error("please enter phone number");
+    } else if (password.length === 0) {
+      toast.error("please enter password");
+    } else if (confirmPassword.length === 0) {
+      toast.error("please confirm password");
+    } else if (password !== confirmPassword) {
+      toast.error("password does not match");
+    } else if (confirmPassword.length === 0) {
+      toast.error("please confirm password");
+    } else if (managerid.length === 0) {
+      toast.error("please select manager");
+    } else {
+      const body = {
+        empno,
+        firstName,
+        lastName,
+        country,
+        email,
+        address,
+        city,
+        Department,
+        BloodGroup,
+        Hire_Date,
+        Birth_Date,
+        moNo,
+        password,
+        role,
+        managerid,
+      };
+      console.log(body);
+      // make the API call to check if user exists
+      axios
+        .post(config.serverURL + "/user/signup", body, {
+          headers: { token: sessionStorage["token"] },
+        })
+        .then((response) => {
+          // get the data returned by server
+          const result = response.data;
+          console.log("succesfyllu added employee details ", result);
+
+          // check if user's authentication is successfull
+          if (result["status"] === "error") {
+            toast.error("successfully not added employee details");
+          } else {
+            toast.success("successfully added employee details");
+
+            // navigate to the singin page
+            navigate("/userdetails");
+            // getuserdetails()
+            handleClose1();
+
+            setEmpno("");
+            setFirstName("");
+            setLastName("");
+            setCountry("");
+            setEmail("");
+
+            setaddress("");
+            setCity("");
+            setDepartment("");
+            setBloodGroup("");
+            setHire_Date("");
+            setBirth_Date("");
+            setmobileNo("");
+            setPassword("");
+            setConfirmPassword("");
+            setManagerId("");
+          }
+        })
+        .catch((error) => {
+          console.log("error");
+          console.log(error);
+        });
+    }
+  };
+  return (
+    <>
+
+
+      <div className="container">
+        <div className="row" style={{ marginTop: 30 }}>
+          <div className="col align-self-start">
+           
+           
+                 
+                      <div className="row" style={{ marginTop: 5, padding: 5 }}>
+                        <div className="col">
+                          <div class="form-floating">
+                            <div className="form-floating">
+                              <input
+                                type="text"
+                                className="form-control"
+                                name="empno"
+                                id="id_empno"
+                                placeholder="Emp No"
+                                onChange={(event) => {
+                                  setEmpno(event.target.value);
+                                }}
+                              />
+                              <label for="floatingPassword">Emp No</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="col">
+                          <div className="form-floating">
+                            <select
+                              className="form-control"
+                              name="Department"
+                              id="id_Department"
+                              disabled={false}
+                              value={Department}
+                              onChange={(event) =>
+                                setDepartment(event.target.value)
+                              }
+                            >
+                              <option>select Department</option>
+
+                              {optionList?.map((item) => (
+                                <option key={item.deptid} value={item.deptname}>
+                                  {item.deptname}
+                                </option>
+                              ))}
+                            </select>
+                            <label for="floatingSelect">Department</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row" style={{ marginTop: 3, padding: 2 }}>
+                        <div className="col">
+                          <div class="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="firstname"
+                              id="id_firstname"
+                              placeholder="First Name"
+                              onChange={(event) => {
+                                setFirstName(event.target.value);
+                              }}
+                            />
+                            <label for="floatingPassword">First Name</label>
+                          </div>
+                        </div>
+                        <div className="col">
+                          <div className="form-floating">
+                            <select
+                              className="form-control"
+                              name="BloodGroup"
+                              id="id_BloodGroup"
+                              value={BloodGroup}
+                              onChange={(event) =>
+                                setBloodGroup(event.target.value)
+                              }
+                            >
+                              <option>select Blood group</option>
+                              {options.map((item) => (
+                                <option>{item}</option>
+                              ))}
+                            </select>
+                            <label for="floatingSelect">Blood Group</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row" style={{ marginTop: 3, padding: 2 }}>
+                        <div className="col">
+                          <div class="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="lastname"
+                              id="id_lastname"
+                              placeholder="Last Name"
+                              onChange={(event) => {
+                                setLastName(event.target.value);
+                              }}
+                            />
+                            <label for="floatingPassword">Last Name</label>
+                          </div>
+                        </div>
+                        <div className="col">
+                          <div className="form-floating">
+                            <input
+                              type="date"
+                              className="form-control"
+                              name="Hire_Date"
+                              id="id_Hire_Date"
+                              placeholder="Password"
+                              onChange={(event) => {
+                                setHire_Date(event.target.value);
+                              }}
+                            />
+                            <label for="floatingPassword">Joining Date</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row" style={{ marginTop: 3, padding: 2 }}>
+                        <div className="col">
+                          <div class="form-floating">
+                            <select
+                              className="form-control"
+                              name="selectCountry"
+                              id="id_selectCountry"
+                              value={country}
+                              onChange={(event) =>
+                                setCountry(event.target.value)
+                              }
+                            >
+                              <option>Select</option>
+                              {options1.map((item) => (
+                                <option>{item}</option>
+                              ))}
+                            </select>
+                            <label for="floatingSelect">Country</label>
+                          </div>
+                        </div>
+                        <div className="col">
+                          <div className="form-floating">
+                            <input
+                              type="date"
+                              className="form-control"
+                              name="Birth_Date"
+                              id="id_Birth_Date"
+                              placeholder="Birth Date"
+                              onChange={(event) => {
+                                setBirth_Date(event.target.value);
+                              }}
+                            />
+                            <label for="floatingPassword">DOB</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row" style={{ marginTop: 3, padding: 2 }}>
+                        <div className="col">
+                          <div class="form-floating">
+                            <input
+                              type="email"
+                              className="form-control"
+                              name="newemail"
+                              id="id_newemail"
+                              placeholder="name@meg-nxt.com"
+                              onChange={(event) => {
+                                setEmail(event.target.value);
+                              }}
+                            />
+                            <label for="floatingInputValue">Email</label>
+                          </div>
+                        </div>
+                        <div className="col">
+                          <div className="form-floating">
+                            <input
+                              type="number"
+                              className="form-control"
+                              name="mobileno"
+                              id="id_mobileno"
+                              placeholder="Mobile No"
+                              onChange={(event) => {
+                                setmobileNo(event.target.value);
+                              }}
+                            />
+                            <label for="floatingPassword">Mobile Number</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row" style={{ marginTop: 3, padding: 2 }}>
+                        <div className="col">
+                          <div class="form-floating">
+                            <select
+                              className="form-control"
+                              name="role"
+                              id="id_role"
+                              value={role}
+                              onChange={(event) =>
+                                setSelected(event.target.value)
+                              }
+                            >
+                              <option>select role</option>
+                              {optionss.map((item) => (
+                                <option>{item}</option>
+                              ))}
+                            </select>
+                            <label for="floatingSelect">Role</label>
+                          </div>
+                        </div>
+                        <div className="col">
+                          <div className="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="city"
+                              id="id_city"
+                              placeholder="City"
+                              onChange={(event) => {
+                                setCity(event.target.value);
+                              }}
+                            />
+                            <label for="floatingPassword">City</label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row" style={{ marginTop: 3, padding: 2 }}>
+                        <div className="col">
+                          <div class="form-floating">
+                            <input
+                              type="text"
+                              className="form-control"
+                              name="address"
+                              id="id_address"
+                              placeholder="Address"
+                              onChange={(event) => {
+                                setaddress(event.target.value);
+                              }}
+                            />
+                            <label for="floatingPassword">Address</label>
+                          </div>
+                        </div>
+                        <div className="col">
+                          <div className="form-floating">
+                            <input
+                              type="password"
+                              className="form-control"
+                              name="confirmpassword"
+                              id="id_confirmpassword"
+                              placeholder="Password"
+                              onChange={(event) => {
+                                setConfirmPassword(event.target.value);
+                              }}
+                            />
+                            <label for="floatingPassword">
+                              Confirm Password
+                            </label>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="row" style={{ marginTop: 3, padding: 2 }}>
+                        <div className="col">
+                          <div class="form-floating">
+                            <input
+                              type="password"
+                              className="form-control"
+                              name="password2"
+                              id="id_password2"
+                              placeholder="Password"
+                              onChange={(event) => {
+                                setPassword(event.target.value);
+                              }}
+                            />
+                            <PasswordStrengthMeter password={password} />
+                            <label for="floatingPassword">Password</label>
+                          </div>
+                        </div>
+
+                        <div className="col">
+                          <div className="form-floating">
+                            <select
+                              className="form-control"
+                              name="Department"
+                              id="id_Department"
+                              disabled={false}
+                              value={managerid}
+                              onChange={(event) =>
+                                setManagerId(event.target.value)
+                              }
+                            >
+                              <option value="">Select Manager</option>
+
+                              {registration
+                                .filter((emps) => emps.role === "Manager") // Assuming 'role' is the key for the role information
+                                .map((emps) => (
+                                  <option
+                                    key={emps.Rid}
+                                    value={`${emps.Rid} 
+      `}
+                                  >
+                                    {emps.Rid} <br />
+                                    <br />
+                                    <span>{emps.Name}</span>
+                                    {/* - {emps.firstName} */}
+                                  </option>
+                                ))}
+                            </select>
+
+                            <label htmlFor="floatingPassword"> Manager</label>
+                          </div>
+                        </div>
+                      </div>
+               
+            
+                    <Button
+                      name="btn_close"
+                      id="id_close"
+                      variant="danger"
+                      onClick={handleClose1}
+                    >
+                      Close
+                    </Button>
+                    <Button
+                      variant="success"
+                      name="addemp"
+                      id="id_addemp"
+                      onClick={addemp}
+                    >
+                      Add
+                    </Button>
+              
+             
+          </div>
+       
+        </div>
+     
+    
+      </div>
+    </>
+  );
+};
+
+const styles = {
+  h3: {
+    textAlign: "center",
+    margin: 20,
+  },
+  button: {
+    marginRight: 10,
+  },
+};
+
+export default EmployeeDetails;
+
+// ******************************************************************************
